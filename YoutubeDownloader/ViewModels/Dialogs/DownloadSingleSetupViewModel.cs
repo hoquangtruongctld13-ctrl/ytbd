@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -66,9 +67,24 @@ public partial class DownloadSingleSetupViewModel(
         if (string.IsNullOrWhiteSpace(filePath))
             return;
 
-        // Download does not start immediately, so lock in the file path to avoid conflicts
-        Directory.CreateDirectoryForFile(filePath);
-        await File.WriteAllBytesAsync(filePath, []);
+        try
+        {
+            // Ensure the file path uses proper encoding and normalize the path
+            filePath = Path.GetFullPath(filePath);
+
+            // Download does not start immediately, so lock in the file path to avoid conflicts
+            Directory.CreateDirectoryForFile(filePath);
+            await File.WriteAllBytesAsync(filePath, []);
+        }
+        catch (IOException)
+        {
+            // If file creation fails due to IO issues, try to continue without placeholder
+            // The downloader will create the directory as needed
+        }
+        catch (UnauthorizedAccessException)
+        {
+            // If we don't have permissions, try to continue - the download will fail with a clearer error
+        }
 
         settingsService.LastContainer = container;
 
