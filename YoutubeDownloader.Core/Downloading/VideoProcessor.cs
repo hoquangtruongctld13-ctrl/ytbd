@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Gress;
@@ -333,7 +334,7 @@ public class VideoProcessor
             // Parse duration from FFmpeg output
             if (e.Data.Contains("Duration:"))
             {
-                var durationMatch = System.Text.RegularExpressions.Regex.Match(
+                var durationMatch = Regex.Match(
                     e.Data,
                     @"Duration: (\d{2}):(\d{2}):(\d{2})\.(\d{2})"
                 );
@@ -352,10 +353,7 @@ public class VideoProcessor
             // Parse progress from FFmpeg output
             if (e.Data.Contains("time=") && duration > TimeSpan.Zero)
             {
-                var timeMatch = System.Text.RegularExpressions.Regex.Match(
-                    e.Data,
-                    @"time=(\d{2}):(\d{2}):(\d{2})\.(\d{2})"
-                );
+                var timeMatch = Regex.Match(e.Data, @"time=(\d{2}):(\d{2}):(\d{2})\.(\d{2})");
                 if (timeMatch.Success)
                 {
                     var currentTime = new TimeSpan(
