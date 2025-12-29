@@ -98,10 +98,14 @@ public partial class DownloadMultipleSetupViewModel(
                 Directory.CreateDirectoryForFile(filePath);
                 await File.WriteAllBytesAsync(filePath, []);
             }
-            catch (Exception)
+            catch (IOException)
             {
-                // If file creation fails, try to continue without placeholder
+                // If file creation fails due to IO issues, try to continue without placeholder
                 // The downloader will create the directory as needed
+            }
+            catch (UnauthorizedAccessException)
+            {
+                // If we don't have permissions, try to continue - the download will fail with a clearer error
             }
 
             downloads.Add(

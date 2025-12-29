@@ -145,7 +145,7 @@
                                         <TextBlock
                                             Margin="4,0"
                                             VerticalAlignment="Center"
-                                            Text="{Binding ScaleFactor, StringFormat='{}{0:P0}'}" />
+                                            Text="{Binding ScaleFactor, StringFormat='{}{0:F2}x'}" />
                                         <Slider
                                             Width="80"
                                             IsEnabled="{Binding ApplyScaling}"
@@ -358,13 +358,13 @@
                                     <TextBlock
                                         Margin="4,0"
                                         VerticalAlignment="Center"
-                                        Text="{Binding VoiceVolume, StringFormat='{}{0:P0}'}" />
+                                        Text="{Binding VoiceVolume, StringFormat='{}{0:F1}'}" />
                                     <Slider
                                         Width="60"
                                         IsEnabled="{Binding IsNotProcessing}"
                                         Maximum="2"
                                         Minimum="0"
-                                        ToolTip.Tip="Voice track volume"
+                                        ToolTip.Tip="Voice track volume (1.0 = normal, 2.0 = 2x louder)"
                                         Value="{Binding VoiceVolume}" />
                                 </DockPanel>
                                 <DockPanel Grid.Column="2" Margin="16,0,0,0">
@@ -375,13 +375,13 @@
                                     <TextBlock
                                         Margin="4,0"
                                         VerticalAlignment="Center"
-                                        Text="{Binding OriginalAudioVolume, StringFormat='{}{0:P0}'}" />
+                                        Text="{Binding OriginalAudioVolume, StringFormat='{}{0:F1}'}" />
                                     <Slider
                                         Width="60"
                                         IsEnabled="{Binding IsNotProcessing}"
                                         Maximum="2"
                                         Minimum="0"
-                                        ToolTip.Tip="Original audio volume (when not muted)"
+                                        ToolTip.Tip="Original audio volume (1.0 = normal, 0.0 = muted)"
                                         Value="{Binding OriginalAudioVolume}" />
                                 </DockPanel>
                             </Grid>
