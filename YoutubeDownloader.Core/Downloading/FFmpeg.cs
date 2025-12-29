@@ -14,8 +14,19 @@ public static class FFmpeg
     {
         static IEnumerable<string> GetProbeDirectoryPaths()
         {
+            // Check ffmpeg folder at the same level as the application
+            yield return Path.Combine(AppContext.BaseDirectory, "ffmpeg");
+
+            // Check ffmpeg folder at the parent directory (same level as project)
+            var parentDir = Directory.GetParent(AppContext.BaseDirectory)?.FullName;
+            if (parentDir != null)
+                yield return Path.Combine(parentDir, "ffmpeg");
+
             yield return AppContext.BaseDirectory;
             yield return Directory.GetCurrentDirectory();
+
+            // Check ffmpeg folder at the same level as current directory
+            yield return Path.Combine(Directory.GetCurrentDirectory(), "ffmpeg");
 
             // Process PATH
             if (
@@ -63,7 +74,8 @@ public static class FFmpeg
     }
 
     public static bool IsBundled() =>
-        File.Exists(Path.Combine(AppContext.BaseDirectory, CliFileName));
+        File.Exists(Path.Combine(AppContext.BaseDirectory, CliFileName))
+        || File.Exists(Path.Combine(AppContext.BaseDirectory, "ffmpeg", CliFileName));
 
     public static bool IsAvailable() => !string.IsNullOrWhiteSpace(TryGetCliFilePath());
 }

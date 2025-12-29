@@ -18,6 +18,8 @@ public static class FileNameTemplate
             template
                 .Replace("$numc", number ?? "", StringComparison.Ordinal)
                 .Replace("$num", number is not null ? $"[{number}]" : "", StringComparison.Ordinal)
+                // New: index prefix format for batch voice merging (e.g., "001_VideoTitle")
+                .Replace("$idx", number is not null ? $"{number}_" : "", StringComparison.Ordinal)
                 .Replace("$id", video.Id, StringComparison.Ordinal)
                 .Replace("$title", video.Title, StringComparison.Ordinal)
                 .Replace("$author", video.Author.ChannelTitle, StringComparison.Ordinal)

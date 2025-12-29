@@ -47,6 +47,32 @@ public class DialogManager : IDisposable
         }
     }
 
+    public async Task<string?> PromptOpenFilePathAsync(
+        IReadOnlyList<FilePickerFileType>? fileTypes = null,
+        string defaultFilePath = ""
+    )
+    {
+        var topLevel =
+            Application.Current?.ApplicationLifetime?.TryGetTopLevel()
+            ?? throw new ApplicationException("Could not find the top-level visual element.");
+
+        var result = await topLevel.StorageProvider.OpenFilePickerAsync(
+            new FilePickerOpenOptions
+            {
+                FileTypeFilter = fileTypes,
+                AllowMultiple = false,
+                SuggestedStartLocation = !string.IsNullOrWhiteSpace(defaultFilePath)
+                    ? await topLevel.StorageProvider.TryGetFolderFromPathAsync(
+                        Path.GetDirectoryName(defaultFilePath) ?? ""
+                    )
+                    : null,
+            }
+        );
+
+        var file = result.FirstOrDefault();
+        return file?.TryGetLocalPath() ?? file?.Path.ToString();
+    }
+
     public async Task<string?> PromptSaveFilePathAsync(
         IReadOnlyList<FilePickerFileType>? fileTypes = null,
         string defaultFilePath = ""

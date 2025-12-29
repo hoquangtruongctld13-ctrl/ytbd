@@ -16,7 +16,7 @@
             Background="{DynamicResource MaterialDarkBackgroundBrush}"
             DockPanel.Dock="Top"
             Orientation="Vertical">
-            <Grid Margin="12,12,8,12" ColumnDefinitions="*,Auto,Auto">
+            <Grid Margin="12,12,8,12" ColumnDefinitions="*,Auto,Auto,Auto">
                 <!--  Query  -->
                 <materialStyles:Card Grid.Column="0">
                     <TextBox
@@ -72,9 +72,25 @@
                         Kind="AccountKey" />
                 </Button>
 
-                <!--  Settings button  -->
+                <!--  Video Processing button  -->
                 <Button
                     Grid.Column="2"
+                    Margin="8,0,0,0"
+                    Padding="8"
+                    VerticalAlignment="Center"
+                    Command="{Binding ShowVideoProcessingCommand}"
+                    Foreground="{DynamicResource MaterialDarkForegroundBrush}"
+                    Theme="{DynamicResource MaterialFlatButton}"
+                    ToolTip.Tip="Video Processing (Copyright Avoidance, Audio Extract, Voice Merge)">
+                    <materialIcons:MaterialIcon
+                        Width="24"
+                        Height="24"
+                        Kind="MovieEdit" />
+                </Button>
+
+                <!--  Settings button  -->
+                <Button
+                    Grid.Column="3"
                     Margin="8,0,0,0"
                     Padding="8"
                     VerticalAlignment="Center"
@@ -293,6 +309,21 @@
                                             Width="24"
                                             Height="24"
                                             Kind="PlayCircleOutline" />
+                                    </Button>
+
+                                    <!--  Process video  -->
+                                    <Button
+                                        Padding="4"
+                                        VerticalAlignment="Center"
+                                        Command="{Binding $parent[UserControl].((components:DashboardViewModel)DataContext).ProcessVideoCommand}"
+                                        CommandParameter="{Binding}"
+                                        IsVisible="{Binding Status, Converter={x:Static converters:EqualityConverter.Equality}, ConverterParameter={x:Static components:DownloadStatus.Completed}}"
+                                        Theme="{DynamicResource MaterialFlatButton}"
+                                        ToolTip.Tip="Process video (Copyright avoidance, Audio extract, Voice merge)">
+                                        <materialIcons:MaterialIcon
+                                            Width="24"
+                                            Height="24"
+                                            Kind="MovieEdit" />
                                     </Button>
 
                                     <!--  Cancel download  -->

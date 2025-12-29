@@ -102,4 +102,14 @@ public class ViewModelManager(IServiceProvider services)
 
     public SettingsViewModel CreateSettingsViewModel() =>
         services.GetRequiredService<SettingsViewModel>();
+
+    public VideoProcessingViewModel CreateVideoProcessingViewModel() =>
+        services.GetRequiredService<VideoProcessingViewModel>();
+
+    public VideoProcessingViewModel CreateVideoProcessingViewModel(string videoFilePath)
+    {
+        var viewModel = services.GetRequiredService<VideoProcessingViewModel>();
+        viewModel.VideoFilePath = videoFilePath;
+        return viewModel;
+    }
 }

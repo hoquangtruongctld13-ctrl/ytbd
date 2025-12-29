@@ -65,6 +65,7 @@ public partial class DashboardViewModel : ViewModelBase
     [NotifyCanExecuteChangedFor(nameof(ProcessQueryCommand))]
     [NotifyCanExecuteChangedFor(nameof(ShowAuthSetupCommand))]
     [NotifyCanExecuteChangedFor(nameof(ShowSettingsCommand))]
+    [NotifyCanExecuteChangedFor(nameof(ShowVideoProcessingCommand))]
     public partial bool IsBusy { get; set; }
 
     public ProgressContainer<Percentage> Progress { get; } = new();
@@ -88,6 +89,23 @@ public partial class DashboardViewModel : ViewModelBase
     [RelayCommand(CanExecute = nameof(CanShowSettings))]
     private async Task ShowSettingsAsync() =>
         await _dialogManager.ShowDialogAsync(_viewModelManager.CreateSettingsViewModel());
+
+    private bool CanShowVideoProcessing() => !IsBusy;
+
+    [RelayCommand(CanExecute = nameof(CanShowVideoProcessing))]
+    private async Task ShowVideoProcessingAsync() =>
+        await _dialogManager.ShowDialogAsync(_viewModelManager.CreateVideoProcessingViewModel());
+
+    [RelayCommand]
+    private async Task ProcessVideoAsync(DownloadViewModel download)
+    {
+        if (download.FilePath is null)
+            return;
+
+        await _dialogManager.ShowDialogAsync(
+            _viewModelManager.CreateVideoProcessingViewModel(download.FilePath)
+        );
+    }
 
     private async void EnqueueDownload(DownloadViewModel download, int position = 0)
     {
