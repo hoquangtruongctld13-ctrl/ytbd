@@ -1,0 +1,302 @@
+<UserControl
+    x:Class="YoutubeDownloader.Views.Dialogs.VideoProcessingView"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:converters="clr-namespace:YoutubeDownloader.Converters"
+    xmlns:dialogs="clr-namespace:YoutubeDownloader.ViewModels.Dialogs"
+    xmlns:materialIcons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+    Width="550"
+    x:DataType="dialogs:VideoProcessingViewModel">
+    <Grid RowDefinitions="Auto,*,Auto,Auto">
+        <TextBlock
+            Grid.Row="0"
+            Margin="16"
+            FontSize="19"
+            FontWeight="Light"
+            Text="Video Processing" />
+
+        <Border
+            Grid.Row="1"
+            Padding="0,8"
+            BorderBrush="{DynamicResource MaterialDividerBrush}"
+            BorderThickness="0,1">
+            <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+                <StackPanel Orientation="Vertical">
+                    <!-- Video File Selection -->
+                    <TextBlock
+                        Margin="16,8,16,4"
+                        FontWeight="SemiBold"
+                        Text="Video File" />
+                    <DockPanel Margin="16,0,16,8" LastChildFill="True">
+                        <Button
+                            Margin="8,0,0,0"
+                            DockPanel.Dock="Right"
+                            Command="{Binding SelectVideoFileCommand}"
+                            Content="Browse"
+                            IsEnabled="{Binding IsNotProcessing}"
+                            Theme="{DynamicResource MaterialOutlineButton}" />
+                        <TextBox
+                            IsReadOnly="True"
+                            Text="{Binding VideoFilePath}"
+                            Watermark="Select a video file..." />
+                    </DockPanel>
+
+                    <!-- Extract Audio Section -->
+                    <TextBlock
+                        Margin="16,16,16,4"
+                        FontWeight="SemiBold"
+                        Text="Extract Audio" />
+                    <Button
+                        Margin="16,4"
+                        Command="{Binding ExtractAudioCommand}"
+                        Content="Extract Audio from Video"
+                        IsEnabled="{Binding IsNotProcessing}"
+                        Theme="{DynamicResource MaterialOutlineButton}" />
+
+                    <!-- Copyright Avoidance Section -->
+                    <TextBlock
+                        Margin="16,16,16,4"
+                        FontWeight="SemiBold"
+                        Text="Copyright Avoidance Processing" />
+                    <StackPanel Margin="16,4" Orientation="Vertical">
+                        <!-- Horizontal Flip -->
+                        <CheckBox
+                            Content="Horizontal Flip"
+                            IsChecked="{Binding HorizontalFlip}"
+                            IsEnabled="{Binding IsNotProcessing}" />
+                        <!-- Vertical Flip -->
+                        <CheckBox
+                            Content="Vertical Flip"
+                            IsChecked="{Binding VerticalFlip}"
+                            IsEnabled="{Binding IsNotProcessing}" />
+                        <!-- Scaling -->
+                        <StackPanel Orientation="Horizontal">
+                            <CheckBox
+                                Content="Scale"
+                                IsChecked="{Binding ApplyScaling}"
+                                IsEnabled="{Binding IsNotProcessing}" />
+                            <TextBlock
+                                Margin="8,0"
+                                VerticalAlignment="Center"
+                                Text="{Binding ScaleFactor, StringFormat='{}{0:F2}'}" />
+                            <Slider
+                                Width="100"
+                                IsEnabled="{Binding ApplyScaling}"
+                                Maximum="1.1"
+                                Minimum="0.8"
+                                Value="{Binding ScaleFactor}" />
+                        </StackPanel>
+                        <!-- Pitch Shift -->
+                        <StackPanel Orientation="Horizontal">
+                            <CheckBox
+                                Content="Pitch Shift"
+                                IsChecked="{Binding ApplyPitchShift}"
+                                IsEnabled="{Binding IsNotProcessing}" />
+                            <TextBlock
+                                Margin="8,0"
+                                VerticalAlignment="Center"
+                                Text="{Binding PitchFactor, StringFormat='{}{0:F2}'}" />
+                            <Slider
+                                Width="100"
+                                IsEnabled="{Binding ApplyPitchShift}"
+                                Maximum="1.2"
+                                Minimum="0.8"
+                                Value="{Binding PitchFactor}" />
+                        </StackPanel>
+                        <!-- Speed Change -->
+                        <StackPanel Orientation="Horizontal">
+                            <CheckBox
+                                Content="Speed Change"
+                                IsChecked="{Binding ApplySpeedChange}"
+                                IsEnabled="{Binding IsNotProcessing}" />
+                            <TextBlock
+                                Margin="8,0"
+                                VerticalAlignment="Center"
+                                Text="{Binding SpeedFactor, StringFormat='{}{0:F2}'}" />
+                            <Slider
+                                Width="100"
+                                IsEnabled="{Binding ApplySpeedChange}"
+                                Maximum="1.2"
+                                Minimum="0.8"
+                                Value="{Binding SpeedFactor}" />
+                        </StackPanel>
+                        <!-- Rotation -->
+                        <StackPanel Orientation="Horizontal">
+                            <CheckBox
+                                Content="Rotation"
+                                IsChecked="{Binding ApplyRotation}"
+                                IsEnabled="{Binding IsNotProcessing}" />
+                            <TextBlock
+                                Margin="8,0"
+                                VerticalAlignment="Center"
+                                Text="{Binding RotationDegrees, StringFormat='{}{0:F1}°'}" />
+                            <Slider
+                                Width="100"
+                                IsEnabled="{Binding ApplyRotation}"
+                                Maximum="5"
+                                Minimum="-5"
+                                Value="{Binding RotationDegrees}" />
+                        </StackPanel>
+                        <!-- Brightness -->
+                        <StackPanel Orientation="Horizontal">
+                            <CheckBox
+                                Content="Brightness"
+                                IsChecked="{Binding ApplyBrightness}"
+                                IsEnabled="{Binding IsNotProcessing}" />
+                            <TextBlock
+                                Margin="8,0"
+                                VerticalAlignment="Center"
+                                Text="{Binding BrightnessAdjust, StringFormat='{}{0:F2}'}" />
+                            <Slider
+                                Width="100"
+                                IsEnabled="{Binding ApplyBrightness}"
+                                Maximum="0.2"
+                                Minimum="-0.2"
+                                Value="{Binding BrightnessAdjust}" />
+                        </StackPanel>
+                        <!-- Contrast -->
+                        <StackPanel Orientation="Horizontal">
+                            <CheckBox
+                                Content="Contrast"
+                                IsChecked="{Binding ApplyContrast}"
+                                IsEnabled="{Binding IsNotProcessing}" />
+                            <TextBlock
+                                Margin="8,0"
+                                VerticalAlignment="Center"
+                                Text="{Binding ContrastAdjust, StringFormat='{}{0:F2}'}" />
+                            <Slider
+                                Width="100"
+                                IsEnabled="{Binding ApplyContrast}"
+                                Maximum="1.3"
+                                Minimum="0.7"
+                                Value="{Binding ContrastAdjust}" />
+                        </StackPanel>
+                        <!-- Blur -->
+                        <StackPanel Orientation="Horizontal">
+                            <CheckBox
+                                Content="Blur"
+                                IsChecked="{Binding ApplyBlur}"
+                                IsEnabled="{Binding IsNotProcessing}" />
+                            <TextBlock
+                                Margin="8,0"
+                                VerticalAlignment="Center"
+                                Text="{Binding BlurSigma, StringFormat='{}{0:F1}'}" />
+                            <Slider
+                                Width="100"
+                                IsEnabled="{Binding ApplyBlur}"
+                                Maximum="2"
+                                Minimum="0"
+                                Value="{Binding BlurSigma}" />
+                        </StackPanel>
+                    </StackPanel>
+                    <Button
+                        Margin="16,8"
+                        Command="{Binding ProcessCopyrightAvoidanceCommand}"
+                        Content="Process for Copyright Avoidance"
+                        IsEnabled="{Binding IsNotProcessing}"
+                        Theme="{DynamicResource MaterialOutlineButton}" />
+
+                    <!-- Voice Merge Section -->
+                    <TextBlock
+                        Margin="16,16,16,4"
+                        FontWeight="SemiBold"
+                        Text="Merge Voice/Audio" />
+                    <DockPanel Margin="16,0,16,8" LastChildFill="True">
+                        <Button
+                            Margin="8,0,0,0"
+                            DockPanel.Dock="Right"
+                            Command="{Binding SelectVoiceFileCommand}"
+                            Content="Browse"
+                            IsEnabled="{Binding IsNotProcessing}"
+                            Theme="{DynamicResource MaterialOutlineButton}" />
+                        <TextBox
+                            IsReadOnly="True"
+                            Text="{Binding VoiceFilePath}"
+                            Watermark="Select a voice/audio file..." />
+                    </DockPanel>
+                    <StackPanel Margin="16,4" Orientation="Vertical">
+                        <CheckBox
+                            Content="Mute Original Audio"
+                            IsChecked="{Binding MuteOriginalAudio}"
+                            IsEnabled="{Binding IsNotProcessing}" />
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock VerticalAlignment="Center" Text="Voice Volume:" />
+                            <TextBlock
+                                Margin="8,0"
+                                VerticalAlignment="Center"
+                                Text="{Binding VoiceVolume, StringFormat='{}{0:F1}'}" />
+                            <Slider
+                                Width="100"
+                                IsEnabled="{Binding IsNotProcessing}"
+                                Maximum="2"
+                                Minimum="0"
+                                Value="{Binding VoiceVolume}" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock VerticalAlignment="Center" Text="Original Audio Volume:" />
+                            <TextBlock
+                                Margin="8,0"
+                                VerticalAlignment="Center"
+                                Text="{Binding OriginalAudioVolume, StringFormat='{}{0:F1}'}" />
+                            <Slider
+                                Width="100"
+                                IsEnabled="{Binding IsNotProcessing}"
+                                Maximum="2"
+                                Minimum="0"
+                                Value="{Binding OriginalAudioVolume}" />
+                        </StackPanel>
+                    </StackPanel>
+                    <StackPanel
+                        Margin="16,8"
+                        Orientation="Horizontal"
+                        Spacing="8">
+                        <Button
+                            Command="{Binding MergeVoiceCommand}"
+                            Content="Merge Voice"
+                            IsEnabled="{Binding IsNotProcessing}"
+                            Theme="{DynamicResource MaterialOutlineButton}" />
+                        <Button
+                            Command="{Binding BatchMergeVoiceCommand}"
+                            Content="Batch Merge (Folders)"
+                            IsEnabled="{Binding IsNotProcessing}"
+                            ToolTip.Tip="Select video folder, voice folder, and output folder to batch merge based on index prefix"
+                            Theme="{DynamicResource MaterialOutlineButton}" />
+                    </StackPanel>
+                </StackPanel>
+            </ScrollViewer>
+        </Border>
+
+        <!-- Progress Section -->
+        <StackPanel Grid.Row="2" Margin="16,8">
+            <ProgressBar
+                Height="4"
+                IsIndeterminate="{Binding Progress.Current.Fraction, Converter={x:Static converters:EqualityConverter.Equality}, ConverterParameter=0}"
+                IsVisible="{Binding IsProcessing}"
+                Value="{Binding Progress.Current.Fraction, Mode=OneWay}" />
+            <TextBlock
+                Margin="0,4"
+                Text="{Binding StatusMessage}"
+                TextWrapping="Wrap" />
+        </StackPanel>
+
+        <!-- Buttons -->
+        <StackPanel
+            Grid.Row="3"
+            Margin="16"
+            HorizontalAlignment="Right"
+            Orientation="Horizontal"
+            Spacing="8">
+            <Button
+                Command="{Binding CancelCommand}"
+                Content="Cancel Processing"
+                IsVisible="{Binding IsProcessing}"
+                Theme="{DynamicResource MaterialOutlineButton}" />
+            <Button
+                Command="{Binding CloseDialogCommand}"
+                Content="CLOSE"
+                IsCancel="True"
+                IsDefault="True"
+                Theme="{DynamicResource MaterialOutlineButton}" />
+        </StackPanel>
+    </Grid>
+</UserControl>
