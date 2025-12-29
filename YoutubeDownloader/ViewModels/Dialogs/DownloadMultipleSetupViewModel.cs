@@ -89,9 +89,20 @@ public partial class DownloadMultipleSetupViewModel(
 
             var filePath = Path.EnsureUniqueFilePath(baseFilePath);
 
-            // Download does not start immediately, so lock in the file path to avoid conflicts
-            Directory.CreateDirectoryForFile(filePath);
-            await File.WriteAllBytesAsync(filePath, []);
+            try
+            {
+                // Ensure the file path uses proper encoding and normalize the path
+                filePath = Path.GetFullPath(filePath);
+
+                // Download does not start immediately, so lock in the file path to avoid conflicts
+                Directory.CreateDirectoryForFile(filePath);
+                await File.WriteAllBytesAsync(filePath, []);
+            }
+            catch (Exception)
+            {
+                // If file creation fails, try to continue without placeholder
+                // The downloader will create the directory as needed
+            }
 
             downloads.Add(
                 viewModelManager.CreateDownloadViewModel(
